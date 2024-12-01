@@ -1,0 +1,36 @@
+#include <vector>
+#include <sstream>
+
+using namespace std;
+
+vector<string>byteToIPAddressess(const unsigned char* bytes, size_t length) {
+	vector<string>ipAddresses;
+	for (size_t i = 0; i < length; i += 4) {
+		if (i + 3 < length) {
+			stringstream ip;
+			ip << static_cast<int>(bytes[i]) << '.'
+				<< static_cast<int>(bytes[i + 1]) << '.'
+				<< static_cast<int>(bytes[i + 2]) << '.'
+				<< static_cast<int>(bytes[i + 3]) << '"';
+			ipAddresses.push_back(ip.str());
+
+		}
+	}
+	return ipAddresses;
+
+}
+
+int main() {
+	unsigned char buf[] =
+		//Paste shellcode here
+
+	size_t bufLen = sizeof(buf) - 1;
+	auto ipAddresses = byteToIPAddressess(buf, bufLen);
+
+	printf("vector<string> ipAddresses = {\n");
+
+	for (const auto& ip : ipAddresses) {
+		printf("\"%s\,\n", ip.c_str());
+	}
+	printf("}");
+}
